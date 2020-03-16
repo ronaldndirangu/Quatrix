@@ -9,14 +9,5 @@ module.exports = {
       offset
     };
     return paginationInit;
-  },
-  getPaginationData: (page, limit, count) => {
-    const pageCount = Math.ceil(count / limit);
-    const pagination = {
-      pageCount,
-      currentPage: +page,
-      dataCount: count
-    };
-    return pagination;
   }
 };

@@ -1,7 +1,7 @@
 const authRouter = require('./authRouter');
-
-const apiPrefix = '/api/v1';
+const tasksController = require('./tasksRouter');
 
 module.exports = (app) => {
-  app.use(apiPrefix, authRouter);
+  app.use(authRouter);
+  app.use(tasksController);
 };
