@@ -25,7 +25,7 @@ routes(app);
 // catch all routers
 app.use('*', (req, res) => res.status(404)
   .json({
-    message: 'Not Found. Use /api/v1 to access the Api'
+    message: 'Not Found.'
   }));
 
 module.exports = app;

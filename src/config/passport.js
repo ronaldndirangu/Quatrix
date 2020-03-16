@@ -3,6 +3,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const Personnel = require('../database/models').Personnel;
 const bcrypt = require('bcrypt');
 
+const SALT_ROUNDS = 10;
+
 // Create a passport middleware to handle user registration
 passport.use('signup', new LocalStrategy({
   usernameField: 'phone',
@@ -11,11 +13,13 @@ passport.use('signup', new LocalStrategy({
 }, async (req, phone, password, done) => {
   try {
     const { firstName, otherName } = req.body;
-    console.log({ firstName, otherName });
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Hash password and shore the hashed password in the database
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const user = await Personnel.findOne({ where: { phone } });
 
     if (user) {
+      // If the user is found in the database, return a message
       return done(null, false, { message: 'User already exists' });
     }
 
