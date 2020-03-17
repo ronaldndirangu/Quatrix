@@ -4,15 +4,14 @@ const Task = require('../database/models').Task;
 module.exports = {
   list: async (req, res) => {
     try {
-      const { page, limit, offset } = Pagination.initializePagination(req);
-      const tasks = await Task.findAll({ offset, limit });
-      const totalTasks = await Task.count();
+      const { page, limit, offset, orderMethod, order } = Pagination.initializePagination(req);
+      const { count, rows } = await Task.findAndCountAll({ offset, limit, order: [[order, orderMethod]] });
 
       return res.status(200).send({
-        totalTasks,
         page,
         perPage: limit,
-        tasks
+        totalTasks: count,
+        tasks: rows
       });
     } catch (error) {
       return res.status(500).send({

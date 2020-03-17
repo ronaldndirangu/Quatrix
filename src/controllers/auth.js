@@ -27,7 +27,8 @@ module.exports = {
       if (info !== undefined) {
         return res.status(403).send({ message: info.message });
       } else {
-        const accessToken = jwt.sign({ phone: user.phone }, process.env.SECRET_KEY, { expiresIn: JWT_EXPIRE_IN });
+        const { id, phone } = user;
+        const accessToken = jwt.sign({ id, phone }, process.env.SECRET_KEY, { expiresIn: JWT_EXPIRE_IN });
         return res.status(200).send({
           accessToken,
           expires_in: JWT_EXPIRE_IN

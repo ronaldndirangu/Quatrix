@@ -1,7 +1,10 @@
 const passport = require('passport');
+const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 const Personnel = require('../database/models').Personnel;
-const bcrypt = require('bcrypt');
+const JWTstrategy = require('passport-jwt').Strategy;
+// We use this to extract the JWT sent by the user
+const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 const SALT_ROUNDS = 10;
 
@@ -54,5 +57,21 @@ passport.use('login', new LocalStrategy({
     return done(null, user);
   } catch (error) {
     return done(error);
+  }
+}));
+
+// This verifies that the token sent by the user is valid
+passport.use(new JWTstrategy({
+  // secret we used to sign our JWT
+  secretOrKey: process.env.SECRET_KEY,
+  // we expect the user to send the token as a query parameter with the name 'secret_token'
+  jwtFromRequest: ExtractJWT.fromHeader('token')
+}, async (token, done) => {
+  try {
+    const { id, phone } = token;
+    // Pass the user details to the next middleware
+    return done(null, { id, phone });
+  } catch (error) {
+    done(error);
   }
 }));
